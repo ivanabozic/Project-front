@@ -1,0 +1,65 @@
+
+
+<div>
+<nb-card class="actionButton">
+    <div class="buttonDiv">
+        <button nbButton (click)="addForm()" status="primary"> 
+            <nb-icon icon="plus-outline"></nb-icon>
+        </button>
+        <button nbButton status="primary"> 
+            <nb-icon icon="save-outline"></nb-icon>
+        </button>
+        <button nbButton status="primary"> 
+            <nb-icon icon="save-outline"></nb-icon>
+        </button>
+    </div>
+  
+</nb-card>
+  
+    <div class="search">
+        <app-filter-table
+        [filter]="settings"
+        [custmWidth]="custmWidth"
+        (filterData)="filter($event)"
+        >
+        
+        </app-filter-table>
+    </div>
+
+    <div class="card">
+        <table style="width: 100%;">
+            <th *ngFor="let col of cols" [ngStyle]="{ 'width': col.width}">
+                {{ col.header }}
+            </th>
+
+            <ng-container *ngFor="let item of data">
+                <tr>
+                    <td *ngFor="let col of cols">
+                        {{ item[col.field] }}
+                    </td>
+                    <td>
+                        <button nbButton (click)="delete(item)">Obrisi</button>
+                        <button nbButton (click)="editItem(item)">Izmeni</button>
+                    </td>
+                </tr>
+            </ng-container>
+
+        </table>
+
+        <nav aria-label="page navigation example" class="pagination-nav">
+            <ul class="pagination">
+                <li class="page-item" [ngClass]="{'disabled': activePage === 1}" (click)="changePage(1)"> <a class="page-link" >«</a></li>
+                <li class="page-item" [ngClass]="{'disabled': activePage === 1}" (click)="changePage(1)"> <a class="page-link"> < </a></li>
+                <li class="page-item page-item-number" [ngClass]="{'active': activePage === item}" *ngFor="let item of displayPages" (click)="changePage(item)">
+                    <a class="page-link page-number" >{{item}}</a>
+                  </li>
+                <li class="page-item" *ngIf="activePage != numberOfPages && hideLast == false"><a class="page-link page-number">···</a></li>
+                <li class="page-item" *ngIf="activePage != numberOfPages && hideLast == false" (click)="changePage(numberOfPages)"><a class="page-link page-number"
+                   >{{numberOfPages}}</a></li>
+                <li class="page-item" [ngClass]="{'disabled': activePage === numberOfPages}" (click)="changePage(numberOfPages)"><a class="page-link" > > </a></li>
+                <li class="page-item" [ngClass]="{'disabled': activePage === numberOfPages}" (click)="changePage(numberOfPages)"><a class="page-link">»</a></li>    
+            </ul>
+        </nav>
+    </div>
+</div>
+

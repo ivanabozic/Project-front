@@ -1,0 +1,16 @@
+<table style="width: 94%;">
+    <ng-container>
+        <tr>
+            <td *ngFor="let item of filter" style="width: width" >
+                <input 
+                nbInput 
+                fullWidth
+                placeholder="{{item.name}}"
+                [(ngModel)]="filterModel[item.name]"
+                (input)="onInputChanged()"
+                >
+            </td>
+        </tr>
+    </ng-container>
+
+</table>

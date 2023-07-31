@@ -1,0 +1,12 @@
+<app-table
+[data]='destinations'
+[cols]="cols"
+[config]="config"
+[form]="form"
+(pushData)="addToForm($event)"
+(editData)="editForm($event)"
+[custmWidth]="94"
+[settings]="settings"
+>
+
+</app-table>

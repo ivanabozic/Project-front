@@ -1,0 +1,13 @@
+<app-table
+[data]='users'
+[cols]="cols"
+[config]="config"
+[form]="form"
+[settings]="settings"
+(pushData)="addToForm()"
+(editData)="editForm($event)"
+(filterData)="filter($event)"
+[custmWidth]="94"
+>
+
+</app-table>

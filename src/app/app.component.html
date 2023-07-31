@@ -1,0 +1,28 @@
+<nb-layout>
+  <nb-layout-header fixed>Company Name</nb-layout-header>
+
+  <nb-sidebar
+  responsive
+  autoCollapse="true"
+  class="menu-sidebar"
+  tag="menu-sidebar"
+  >
+  <ng-content select="items"></ng-content>
+  <nb-menu [items]="items"></nb-menu>
+
+  </nb-sidebar>
+
+  <nb-layout-column>
+    <router-outlet></router-outlet>
+  </nb-layout-column>
+
+ <!--
+<nb-layout-column>
+    Page Content 
+    <button nbButton>Hello World</button>
+    <app-table>
+      
+    </app-table>
+  </nb-layout-column>
+ --> 
+</nb-layout>
