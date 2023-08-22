@@ -1,5 +1,26 @@
-<nb-layout>
-  <nb-layout-header fixed>Company Name</nb-layout-header>
+<nb-layout windowMode>
+  <nb-layout-header fixed>
+    <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
+      <nb-icon icon="menu-2-outline"></nb-icon>
+    </a>
+
+    <nb-select 
+    [(selected)]="selected"
+    placeholder="Language"
+    (selectedChange)='onOptionsSelected($event)'
+    >
+    >
+    <nb-option value="1">
+      {{ "sr" | translate}}
+    </nb-option>
+    <nb-option value="2">
+      {{ "en" | translate}}
+     </nb-option>      
+
+    </nb-select>
+  </nb-layout-header>
+
+
 
   <nb-sidebar
   responsive

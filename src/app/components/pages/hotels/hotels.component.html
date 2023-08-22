@@ -1,0 +1,67 @@
+
+<app-list-view
+*ngIf="hotels"
+[title]="title"
+[items]="hotels"
+[configFilterList]="configFilterList"
+(pushData)="selectedData($event)"
+(filterData)="filter($event)"
+>
+<div componentHeader >
+  <button nbButton status="primary" style="margin-left: 70px;" (click)="addForm()"> <nb-icon icon="plus-outline" ></nb-icon>{{'addNew' | translate}}</button>
+</div>
+
+
+
+<div componentHeadline>  
+    <span>
+      {{ selected?.name }}
+    </span>
+
+
+    <div style="float: right;">
+      <button nbButton (click)="editForm()">
+        <nb-icon icon="edit-outline"></nb-icon>
+      </button>
+      <button nbButton style="margin-left: 6px;">
+        <nb-icon icon="trash-outline"></nb-icon>
+      </button>
+    </div>
+
+</div>
+<div componentContent>
+    <nb-accordion>
+        <nb-accordion-item>
+         <nb-accordion-item-header>{{ 'elementaryData' | translate}}</nb-accordion-item-header>
+         <nb-accordion-item-body>
+          <ul>
+            <li>
+              <p>
+                {{"name" | translate}}: {{selected?.name ? selected.name : ("None" | translate)}}
+              </p>
+            </li>
+            <li>
+              <p>
+                {{"numberStar" | translate}}: {{selected?.numberStar ? selected.numberStar : ("None" | translate)}}
+              </p>
+            </li>
+            <li>
+              <p>
+                {{"destination" | translate}}: {{selected?.destination ? selected.destination.name : ("None" | translate)}}
+              </p>
+            </li>
+            <li>
+              <p>
+                {{"roomNumber" | translate}}: {{selected?.roomNumber ? selected.roomNumber : ("None" | translate)}}
+              </p>
+            </li>
+          </ul>
+         </nb-accordion-item-body>
+        </nb-accordion-item>
+       </nb-accordion>
+</div>
+
+</app-list-view>
+
+
+

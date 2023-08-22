@@ -1,15 +1,21 @@
 <nb-card class="card">
-    <nb-card-header>Add new</nb-card-header>
+    <nb-card-header>{{ (!isEdit ?  "add" : "edit") | translate}}
+        <div class="close-button float-right">
+            <button nbButton ghost status="danger" (click)="closeDialog()">X</button>
+          </div>
+    </nb-card-header>
     <nb-card-body>
         <form [formGroup]="form">
             <div class="row" *ngFor="let item of config">
-                <label  *ngIf="!item.disabled"> {{ item.name }}  </label>
+                <label  *ngIf="!item.disabled"> 
+                    {{ (item.name ? item.name : "None") | translate }}
+                </label>
                 <input 
                 *ngIf="item.type == 'input-text'" 
                 type="text" 
                 nbInput 
                 fullWidth 
-                placeholder="{{ item.name }}" 
+                placeholder="{{ (item.name ? item.name : 'None') | translate}}" 
                 formControlName="{{ item.name }}" 
                 type="text"
                 [status]="checkStatus(item) ? 'success' : 'danger'"
@@ -19,7 +25,7 @@
                 type="text" 
                 nbInput 
                 fullWidth 
-                placeholder="{{ item.name }}" 
+                placeholder="{{ (item.name ? item.name : 'None') | translate}}" 
                 formControlName="{{ item.name }}" 
                 type="number"
                 [status]="checkStatus(item) ? 'success' : 'danger'"
@@ -28,9 +34,9 @@
                 <nb-select 
                 *ngIf="item.type == 'input-select'" 
                 fullWidth 
+                placeholder="{{ (item.name ? item.name : 'None') | translate}}" 
                 formControlName="{{ item.name }}"
-                 [(selected)]="item.select"
-                 [status]="checkStatus(item) ? 'success' : 'danger'"
+                [status]="checkStatus(item) ? 'success' : 'danger'"
                  >
                     <nb-option *ngFor="let option of item.data" value="{{ option.id }}">
                     {{ option.name }}
@@ -41,6 +47,7 @@
                 <nb-select 
                 *ngIf="item.type == 'input-multipleselect'" 
                 fullWidth 
+                placeholder="{{ (item.name ? item.name : 'None') | translate}}" 
                 formControlName="{{ item.name }}" 
                 multiple 
                 [(selected)]="item.selectArary"
@@ -52,12 +59,15 @@
 
                 </nb-select>
 
-                <div *ngIf="item.type == 'input-datatimepicker'" style="width: 100%;">
-                    <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker" fullWidth formControlName="{{ item.name }}" [status]="checkStatus(item) ? 'success' : 'danger'">
-                    <nb-datepicker #dateTimePicker fullWidth></nb-datepicker>
+                <div *ngIf="item.type == 'input-date'" style="width: 100%;">
+                    <input nbInput placeholder="Pick Date" [nbDatepicker]="datePicker" fullWidth formControlName="{{ item.name }}" [status]="checkStatus(item) ? 'success' : 'danger'" placeholder="{{ (item.name ? item.name : 'None') | translate}}" >
+                    <nb-datepicker #datePicker fullWidth></nb-datepicker>
                 </div>
 
-
+                <div *ngIf="item.type == 'input-datatime'" style="width: 100%;">
+                    <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker" fullWidth formControlName="{{ item.name }}" [status]="checkStatus(item) ? 'success' : 'danger' " placeholder="{{ (item.name ? item.name : 'None') | translate}}" >
+                    <nb-date-timepicker  withSeconds #dateTimePicker fullWidth></nb-date-timepicker>
+                </div>
                 <div *ngIf="item.type == 'input-password' && !isEdit">
                     <app-password
                     (pushData)="addPassword($event)"
@@ -72,9 +82,10 @@
 
     </nb-card-body>
     <nb-card-footer>
+        
         <div class="buttonRow">
-            <button nbButton status="success" (click)="addUser()" [disabled]="!form.valid || isDisableButton"> Add </button>
-            <button nbButton status="danger" (click)="closeDialog()"> Close </button>
+            <button nbButton status="success" (click)="addUser()" [disabled]="!form.valid || isDisableButton"> {{ (!isEdit ? "add" : "edit") | translate}} </button>
+            <button nbButton status="danger" (click)="closeDialog()"> {{ 'close' | translate}} </button>
         </div>
 
     </nb-card-footer>

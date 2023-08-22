@@ -9,6 +9,7 @@ import { FormComponent } from '../../form/form.component';
 import { FilterItem } from 'src/app/models/filter-item';
 import { environment  } from 'src/assets/environment';
 import { HttpService } from 'src/app/services/http-service';
+import { FormStepperComponent } from '../../form-stepper/form-stepper.component';
 
 @Component({
   selector: 'app-users',
@@ -20,12 +21,14 @@ export class UsersComponent {
   cols!: Column[];
   settings!: FilterItem[];
   config!: FormConfig[];
-  form!: FormGroup;
+  formList: any[] = [];
+  form!: any;
+  form1!: any;
   isEdit: boolean = false;
   constructor(private userService: UserService, private dialogService: NbDialogService, private httpService: HttpService){}
 
   ngOnInit() {
-    console.log("usao")
+
     this.httpService.get('/User/getAll').subscribe( result => {
       this.users = result as any;
     });
@@ -34,15 +37,17 @@ export class UsersComponent {
     this.setColumns();
     this.setFilter();
 
-    this.form = this.userService.getForm();
+    //this.form = this.userService.getForm(0);
+
+    this.createForms(null);
   }
 
   setColumns(){
     this.cols = [
-      {field: 'id', header: 'Id', width:'25%', editable: true},
-      {field: 'name', header: 'Name', width:'25%', editable: true},
-      {field: 'username', header: 'Username', width:'25%', editable: true},
-      {field: 'email', header: 'Email', width:'25%', editable: true}
+      {field: 'id', header: 'id', width:'25%', editable: true,  type: 'input-text', tooltip: false},
+      {field: 'name', header: 'name', width:'25%', editable: true,  type: 'input-text', tooltip: false},
+      {field: 'username', header: 'username', width:'25%', editable: true,  type: 'input-text', tooltip: false},
+      {field: 'email', header: 'email', width:'25%', editable: true,  type: 'input-text', tooltip: false}
     ]
   }
 
@@ -75,14 +80,15 @@ export class UsersComponent {
 
   addToForm(){
     this.isEdit = false;
-    this.setConfig()
-    this.form = this.userService.getForm();
-
+    //this.setConfig()
+    //this.form = this.userService.getForm(0);
+    this.createForms(null)
     let ref = this.dialogService.open(FormComponent, {
       context: {
         form: this.form,
         config: this.config,
-        isEdit: false
+        isEdit: false,
+        formList: this.formList
       }
     })
 
@@ -94,15 +100,16 @@ export class UsersComponent {
 
   editForm($event: any){
     this.isEdit = true;
-    this.setConfig();
+    //this.setConfig();
     if($event){
-      this.userService.setForm(this.form, $event)
+      this.createForms($event)
 
       let ref = this.dialogService.open(FormComponent, {
         context: {
           form: this.form,
           config: this.config,
-          isEdit: true
+          isEdit: true,
+          formList: this.formList
         }
       })
   
@@ -113,11 +120,6 @@ export class UsersComponent {
   }
 
   filter($event: any){
-    console.log("usao: ", $event)
-    this.httpService.get('/User/getAll').subscribe( result => {
-      this.users = result as any;
-    });
-
     this.httpService
     .post('/User/filter', $event)
     .subscribe(x =>
@@ -145,6 +147,47 @@ export class UsersComponent {
         name: 'email'
       }
     ]
+  }
+
+
+  createForms($event: any){
+
+    this.form = this.userService.getForm(0);
+    this.form1 = this.userService.getForm(1);
+
+    if(this.isEdit){
+      this.userService.setForm(this.form, $event, 0)
+      this.userService.setForm(this.form1, $event, 0)
+    }
+   
+
+    this.setConfig();
+
+    this.formList = [
+      {
+        form: this.form,
+        title: "elementaryData",
+        config: this.config
+      },
+      {
+        form: this.form1,
+        title: "elementaryData2",
+        config: this.config
+      }      
+
+    ] 
+  }
+
+  openStepper(){
+    let ref = this.dialogService.open(FormStepperComponent, {
+      context: {
+ 
+      }
+    })
+
+    ref.onClose.subscribe((res) => {
+  
+    });
   }
 }
 

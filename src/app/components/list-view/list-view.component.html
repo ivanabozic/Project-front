@@ -1,0 +1,65 @@
+<div class="main">
+    <div class="main-list">
+        <div class="header-title">
+            <h1> {{ title | translate }}</h1>
+            <ng-content select="[componentHeader]">
+
+            </ng-content>
+            
+        </div>
+        <div class="search">
+          <nb-form-field class="filter-input">
+            <nb-icon nbPrefix icon="search-outline"></nb-icon>
+            <input nbInput placeholder="{{'search' | translate}}"     
+            (input)="filterList()"
+            fullWidth
+            [formControl]="filterString"/>
+          </nb-form-field>
+          <div class="sort">
+            <button nbButton (click)="ascDscToggle()">
+              <nb-icon nbPrefix icon="arrow-downward-outline"  *ngIf="ascList"></nb-icon>
+              <nb-icon nbPrefix icon="arrow-upward-outline"  *ngIf="!ascList"></nb-icon>
+            </button>
+
+           
+          </div>
+        </div>
+        <div class="list-items">
+            <div class="item" *ngFor="let item of items"
+            (click)="showItem(item.id)"
+            [ngClass]="{
+                'active-item': clickedItem == item.id,
+              }"
+            >
+                <span> {{ item.name }}</span>       
+            </div>     
+        </div>
+    </div>
+
+    <div class="content-view" id="listView">
+        <div *ngIf="clickedItem" style="width: 100%;">
+          <div class="headline">
+            <ng-content select="[componentHeadline]"></ng-content>
+          </div>
+          <div class="accordion-style">
+            <ng-content select="[componentContent]"></ng-content>
+          </div>
+      </div>
+</div>
+
+<div class="filter"   style="cursor: pointer" [ngClass]="!hiddenFilter ? 'bounceInRight' : ''">
+  <div 
+  class="filter-button"
+  (click)="hiddenFilter = !hiddenFilter"
+  >
+    <nb-icon icon="funnel-outline" pack="eva"></nb-icon>
+  </div>
+
+  <app-filter-list-view
+  [hidden]="hiddenFilter"
+  [configFilterList]="configFilterList"
+  (filterData)="filter($event)"
+  >
+
+  </app-filter-list-view>
+</div>

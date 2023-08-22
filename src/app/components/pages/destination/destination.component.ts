@@ -7,6 +7,7 @@ import { FormGroup } from '@angular/forms';
 import { NbDialogService } from '@nebular/theme';
 import { FormComponent } from '../../form/form.component';
 import { FilterItem } from 'src/app/models/filter-item';
+import { HttpService } from 'src/app/services/http-service';
 
 @Component({
   selector: 'app-destination',
@@ -19,24 +20,62 @@ export class DestinationComponent {
   config!: FormConfig[];
   form!: FormGroup;
   settings!: FilterItem[];
-
-  constructor(private destinationService: DestinationService, private dialogService: NbDialogService){}
+  countries: any;
+  constructor(private destinationService: DestinationService, private dialogService: NbDialogService, private httpService: HttpService){}
 
   ngOnInit() {
-    this.destinations = this.destinationService.getData();
+    var body = {}
+    this.httpService
+    .post('/Destination/filter', body)
+    .subscribe(x =>
+      {
+        this.destinations = x as [];
+        console.log("des: ", this.destinations)
+      })
+
     this.setColumns();
     this.setFilter();
 
     this.form = this.destinationService.getForm();
     //this.setConfig();
+
+    this.getDataCounty()
   }
 
   setColumns(){
     this.cols = [
-      {field: 'id', header: 'Id', width:'25%', editable: true},
-      {field: 'name', header: 'Name', width:'25%', editable: true},
-      {field: 'description', header: 'Description', width:'25%', editable: true},
-      {field: 'country', header: 'Country', width:'25%', editable: true}
+      {
+        field: 'id', 
+        header: 'id', 
+        width:'25%', 
+        editable: true,
+        type: 'input-text',
+        tooltip: false
+      },
+      {
+        field: 'name', 
+        header: 'name', 
+        width:'25%', 
+        editable: true,  
+        type: 'input-text',
+        tooltip: false
+      },
+      {
+        field: 'description', 
+        header: 'description', 
+        width:'25%', 
+        editable: true,  
+        type: 'input-text',
+        tooltip: true
+      },
+      {
+        field: 'country', 
+        header: 'country', 
+        width:'25%', 
+        editable: true,
+        type: "input-select",
+        tooltip: false
+      }
     ]
   }
 
@@ -48,7 +87,8 @@ export class DestinationComponent {
       let ref = this.dialogService.open(FormComponent, {
         context: {
           form: this.form,
-          config: this.config
+          config: this.config,
+          isEdit: true
         }
       })
   
@@ -59,7 +99,6 @@ export class DestinationComponent {
   }
 
   setConfig(){
-    console.log("value: ", this.form.controls['country'].value)
     this.config = [
       {
         type: 'input-text', 
@@ -76,12 +115,19 @@ export class DestinationComponent {
       {
         type: 'input-select',
         name: 'country',
-        data: this.destinationService.getDataCounty(),
-        select: this.form.controls['country'].value
+        data: this.countries
       }
     ]
 
   }
+
+  getDataCounty(){
+    this.httpService.get('/Destination/countries').subscribe( result => {
+      this.countries = result as any;
+    });
+
+  }
+
 
   addToForm($event: any){
     this.form = this.destinationService.getForm();
@@ -89,7 +135,8 @@ export class DestinationComponent {
     let ref = this.dialogService.open(FormComponent, {
       context: {
         form: this.form,
-        config: this.config
+        config: this.config,
+        isEdit: false
       }
     })
 
@@ -99,8 +146,16 @@ export class DestinationComponent {
     });
   }
 
+  filter($event: any){
+    this.httpService
+    .post('/Destination/filter', $event)
+    .subscribe(x =>
+      {
+        this.destinations = x as [];
+      })
+  }
+
   setFilter(){
-    var width= 100 / 7;
     this.settings = [
       {
         type: 'input-text', 
@@ -116,7 +171,7 @@ export class DestinationComponent {
       },
       {
         type: 'input-text', 
-        name: 'conutry'
+        name: 'country'
       }
     ]
   

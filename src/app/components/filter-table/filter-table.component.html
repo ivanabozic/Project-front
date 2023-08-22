@@ -1,16 +1,27 @@
-<table style="width: 94%;">
-    <ng-container>
-        <tr>
-            <td *ngFor="let item of filter" style="width: width" >
-                <input 
-                nbInput 
-                fullWidth
-                placeholder="{{item.name}}"
-                [(ngModel)]="filterModel[item.name]"
-                (input)="onInputChanged()"
-                >
-            </td>
-        </tr>
-    </ng-container>
 
-</table>
+<div class="search">
+    <div *ngFor="let item of filter" [style.width.%]="width">
+            <input 
+            nbInput 
+            *ngIf="item.type == 'input-text' "
+            placeholder="{{item.name | translate}}"
+            [(ngModel)]="filterModel[item.name]"
+            (input)="onInputChanged()"
+            fullWidth
+            >
+            <input 
+            nbInput 
+            *ngIf="item.type == 'input-number' "
+            type="number"
+            placeholder="{{item.name | translate}}"
+            [(ngModel)]="filterModel[item.name]"
+            (input)="onInputChanged()"
+            fullWidth
+            >
+    </div>
+</div>
+
+
+
+
+

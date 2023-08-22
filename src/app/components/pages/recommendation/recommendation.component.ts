@@ -7,6 +7,7 @@ import { FormGroup } from '@angular/forms';
 import { FormComponent } from '../../form/form.component';
 import { NbDialogService } from '@nebular/theme';
 import { FilterItem } from 'src/app/models/filter-item';
+import { HttpService } from 'src/app/services/http-service';
 
 @Component({
   selector: 'app-recommendation',
@@ -19,26 +20,38 @@ export class RecommendationComponent {
   config!: FormConfig[];
   form!: FormGroup;
   settings!: FilterItem[];
+  countries: any;
 
-  constructor(private recommendationService: RecommendationService, private dialogService: NbDialogService){}
+  constructor(private recommendationService: RecommendationService, private dialogService: NbDialogService, private httpService: HttpService){}
 
   ngOnInit() {
-    this.recommendation = this.recommendationService.getData();
+    //this.recommendation = this.recommendationService.getData();
+
+    this.httpService
+    .post('/Recommendation/filter', {})
+    .subscribe(x =>
+      {
+        this.recommendation = x as [];
+      })
+
+    this.getDataCounty();
     this.setColumns();
     this.setFilter();
-    
+  
     this.setConfig();
     this.form = this.recommendationService.getForm();
   }
 
   editForm($event: any){
+
     if($event){
       this.recommendationService.setForm(this.form, $event)
-
+      this.setConfig();
       let ref = this.dialogService.open(FormComponent, {
         context: {
           form: this.form,
-          config: this.config
+          config: this.config,
+          isEdit: true
         }
       })
   
@@ -50,10 +63,10 @@ export class RecommendationComponent {
 
   setColumns(){
     this.cols = [
-      {field: 'id', header: 'Id', width:'25%', editable: true},
-      {field: 'destination', header: 'Destination', width:'25%', editable: true},
-      {field: 'price', header: 'Price', width:'25%', editable: true},
-      {field: 'departure', header: 'Departure', width:'25%', editable: true}
+      {field: 'id', header: 'id', width:'25%', editable: true,  type: 'input-text', tooltip: false},
+      {field: 'destination', header: 'destination', width:'25%', editable: true,  type: 'input-select', tooltip: false},
+      {field: 'price', header: 'price', width:'25%', editable: true,  type: 'input-text', tooltip: false},
+      {field: 'departure', header: 'departure', width:'25%', editable: true,  type: 'input-date', tooltip: false}
     ]
   }
 
@@ -64,15 +77,16 @@ export class RecommendationComponent {
         name: 'id'
       },
       {
-        type: 'input-text',
-        name: 'destination'
+        type: 'input-select',
+        name: 'destination',
+        data: this.countries
       },
       {
         type: 'input-number',
         name: 'price'
       },
       {
-        type: 'input-text',
+        type: 'input-datatime',
         name: 'departure'
       }
     ]
@@ -81,10 +95,12 @@ export class RecommendationComponent {
 
   addToForm($event: any){
     this.form = this.recommendationService.getForm();
+    this.setConfig();
     let ref = this.dialogService.open(FormComponent, {
       context: {
         form: this.form,
-        config: this.config
+        config: this.config,
+        isEdit: false
       }
     })
 
@@ -105,7 +121,7 @@ export class RecommendationComponent {
         name: 'destination'
       },
       {
-        type: 'input-text', 
+        type: 'input-number', 
         name: 'price'
       },
       {
@@ -113,5 +129,21 @@ export class RecommendationComponent {
         name: 'departure'
       }
     ]
+  }
+
+  filter($event: any){
+    this.httpService
+    .post('/Recommendation/filter', $event)
+    .subscribe(x =>
+      {
+        this.recommendation = x as [];
+      })
+  }
+
+  getDataCounty(){
+    this.httpService.get('/Destination/countries').subscribe( result => {
+      this.countries = result as any;
+    });
+
   }
 }

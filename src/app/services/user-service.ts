@@ -40,21 +40,44 @@ export class UserService {
     }
 
 
-    getForm(){
-        return new FormGroup(
-            {
-            id: new FormControl('', [Validators.required]),
-            name: new FormControl('', [Validators.required]),
-            username: new FormControl('', [Validators.required]),
-            email: new FormControl('', [Validators.required])
-          });
+    getForm(formId: number=0){
+        if(formId == 0){
+            return new FormGroup(
+                {
+                   id: new FormControl('', [Validators.required]),
+                   name: new FormControl('', [Validators.required]),
+                   username: new FormControl('', [Validators.required]),
+                   email: new FormControl('', [Validators.required])
+                 });
+        }
+        else if(formId == 1){
+            return new FormGroup(
+                {
+                   id: new FormControl(''),
+                   name: new FormControl(''),
+                   username: new FormControl(''),
+                   email: new FormControl('')
+                 });
+        }
+        return null;
+
     }
-    setForm(form: FormGroup, data: User){
-        form.setValue({
-            id: data?.id,
-            name: data?.name,
-            username: data?.username,
-            email: data?.email
-        })
+    setForm(form: FormGroup, data: User, formId:number=0){
+        if(formId == 0){
+            form.setValue({
+                id: data?.id,
+                name: data?.name,
+                username: data?.username,
+                email: data?.email
+            })
+        }
+        if(formId == 1){
+            form.setValue({
+                id: data?.id,
+                name: data?.name,
+                username: data?.username,
+                email: data?.email
+            })
+        }
     }
 }

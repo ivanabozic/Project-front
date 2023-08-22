@@ -1,7 +1,7 @@
 
 export interface Recommendation {
     id?: string;
-    destination?: string;
+    destination?: any;
     price?: number;
     departure?: Date;
 }

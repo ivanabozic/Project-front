@@ -35,7 +35,7 @@ export class RecommendationService {
             {
             id: new FormControl('', [Validators.required]),
             destination: new FormControl('', [Validators.required]),
-            price: new FormControl(''),
+            price: new FormControl(0),
             departure: new FormControl('')
           });
     }
@@ -43,9 +43,9 @@ export class RecommendationService {
     setForm(form: FormGroup, data: Recommendation){
         form.setValue({
             id: data?.id,
-            destination: data?.destination,
+            destination: data?.destination.id,
             price: data?.price,
-            departure: data?.departure
+            departure: data.departure ? new Date(data?.departure) : null
         })
     }
 }

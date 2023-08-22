@@ -17,8 +17,10 @@ export class FilterTableComponent {
   public filterModel: any = {};
 
   ngOnInit() {
-    this.width = this.custmWidth / this.filter.length;
+    this.width = this.custmWidth / this.filter?.length;
 
+    console.log("width: ", this.width)
+    console.log("filter: ", this.filter)
     this.generateFilterModelItem();
   }  
 

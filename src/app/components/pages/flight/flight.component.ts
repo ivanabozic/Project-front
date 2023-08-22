@@ -8,6 +8,7 @@ import { DestinationService } from 'src/app/services/destination-service';
 import { NbDialogService } from '@nebular/theme';
 import { FormComponent } from '../../form/form.component';
 import { FilterItem } from 'src/app/models/filter-item';
+import { HttpService } from 'src/app/services/http-service';
 
 @Component({
   selector: 'app-flight',
@@ -20,13 +21,24 @@ export class FlightComponent {
   config!: FormConfig[];
   form!: FormGroup;
   settings!: FilterItem[];
+  countries: any;
 
-  constructor(private flightService: FlightService, private destinationService: DestinationService, private dialogService: NbDialogService){}
+  constructor(private flightService: FlightService, private destinationService: DestinationService, private dialogService: NbDialogService, private httpService: HttpService){}
 
   ngOnInit() {
-    this.flights = this.flightService.getData();
+   // this.flights = this.flightService.getData();
+
+   this.httpService
+      .post('/Flights/filter', {})
+      .subscribe(x =>
+        {
+          this.flights = x as [];
+        })
+
     this.setColumns();
     this.setFilter();
+
+    this.getDataCounty()
 
 
     this.form = this.flightService.getForm();
@@ -39,24 +51,25 @@ export class FlightComponent {
       let ref = this.dialogService.open(FormComponent, {
         context: {
           form: this.form,
-          config: this.config
+          config: this.config,
+          isEdit: true
         }
       })
   
       ref.onClose.subscribe((res) => {
-        console.log("edit: ", res)
+
       });
     }
   }
 
   setColumns(){
     this.cols = [
-      {field: 'id', header: 'Id', width:'16%', editable: true},
-      {field: 'origin', header: 'Origin', width:'16%', editable: true},
-      {field: 'destination', header: 'Destination', width:'16%', editable: true},
-      {field: 'departure', header: 'Departure', width:'16%', editable: true},
-      {field: 'return', header: 'Return', width:'16%', editable: true},
-      {field: 'price', header: 'Price', width:'16%', editable: true}
+      {field: 'id', header: 'id', width:'16%', editable: true,  type: 'input-text', tooltip: false},
+      {field: 'origin', header: 'origin', width:'16%', editable: true,  type: 'input-select', tooltip: false},
+      {field: 'destination', header: 'destination', width:'16%', editable: true,  type: 'input-select', tooltip: false},
+      {field: 'departure', header: 'departure', width:'16%', editable: true,  type: 'input-date', tooltip: false},
+      {field: 'return', header: 'return', width:'16%', editable: true,  type: 'input-date', tooltip: false},
+      {field: 'price', header: 'price', width:'16%', editable: true,  type: 'input-text', tooltip: false}
     ]
   }
 
@@ -67,21 +80,21 @@ export class FlightComponent {
         name: 'id'
       },
       {
-        type: 'input-text',
-        name: 'origin'
+        type: 'input-select',
+        name: 'origin',
+        data: this.countries
       },
       {
-        type: 'input-multipleselect',
+        type: 'input-select',
         name: 'destination',
-        data: this.destinationService.getDataCounty(),
-        selectArary: this.form.controls['destination'].value
+        data: this.countries
       },
       {
-        type: 'input-datatimepicker',
+        type: 'input-datatime',
         name: 'departure'
       },
       {
-        type: 'input-datatimepicker',
+        type: 'input-datatime',
         name: 'return'
       },
       {
@@ -98,7 +111,8 @@ export class FlightComponent {
     let ref = this.dialogService.open(FormComponent, {
       context: {
         form: this.form,
-        config: this.config
+        config: this.config,
+        isEdit: false
       }
     })
 
@@ -106,6 +120,15 @@ export class FlightComponent {
       if(res)
         this.flights.push(res);
     });
+  }
+
+  filter($event: any){
+    this.httpService
+    .post('/Flights/filter', $event)
+    .subscribe(x =>
+      {
+        this.flights = x as [];
+      })
   }
 
   setFilter(){
@@ -131,9 +154,17 @@ export class FlightComponent {
         name: 'return'
       },
       {
-        type: 'input-text', 
+        type: 'input-number', 
         name: 'price'
       }
     ]
   }
+
+  getDataCounty(){
+    this.httpService.get('/Destination/countries').subscribe( result => {
+      this.countries = result as any;
+    });
+
+  }
+
 }

@@ -63,7 +63,7 @@ export class DestinationService {
             id: data?.id,
             name: data?.name,
             description: data?.description,
-            country: data?.country
+            country: data?.country?.id
         })
     }
 }

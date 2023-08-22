@@ -1,0 +1,72 @@
+
+<app-list-view
+*ngIf="reservations"
+[title]="title"
+[items]="reservations"
+(pushData)="selectedData($event)"
+[configFilterList]="configFilterList"
+(filterData)="filter($event)"
+>
+<div componentHeader >
+  <button nbButton status="primary" style="margin-left: 70px;" (click)="addForm()"> <nb-icon icon="plus-outline" ></nb-icon>{{'addNew' | translate}}</button>
+</div>
+
+
+
+<div componentHeadline>  
+    <span>
+      {{ selected?.name }}
+    </span>
+
+
+    <div style="float: right;">
+      <button nbButton (click)="editForm($event)">
+        <nb-icon icon="edit-outline"></nb-icon>
+      </button>
+      <button nbButton style="margin-left: 6px;">
+        <nb-icon icon="trash-outline"></nb-icon>
+      </button>
+    </div>
+
+</div>
+<div componentContent>
+    <nb-accordion>
+        <nb-accordion-item>
+         <nb-accordion-item-header>{{ 'elementaryData' | translate}}</nb-accordion-item-header>
+         <nb-accordion-item-body>
+           <ul >
+            <li>
+              <p>
+                {{"email" | translate}}: {{selected?.email ? selected.email : ("None" | translate)}}
+              </p>
+            </li>
+            <li>
+              <p>
+                {{"destination" | translate}}: {{selected?.destination ? selected.destination.name : ("None" | translate)}}
+              </p>
+            </li>
+            <li>
+              <p>
+                {{"dateFrom" | translate}}: {{selected?.dateFrom ? (selected.dateFrom | date: 'dd/MM/yyyy hh:mm a') : ("None" | translate)}}
+              </p>
+            </li>
+            <li>
+              <p>
+                {{"dateTo" | translate}}: {{selected?.dateTo ? (selected.dateTo | date: 'dd/MM/yyyy hh:mm a'): ("None" | translate)}}
+              </p>
+            </li>
+            <li>
+              <p>
+                {{"price" | translate}}: {{selected?.price ? selected.price : ("None" | translate)}}
+              </p>
+            </li>
+           </ul>
+         </nb-accordion-item-body>
+        </nb-accordion-item>
+       </nb-accordion>
+</div>
+
+</app-list-view>
+
+
+

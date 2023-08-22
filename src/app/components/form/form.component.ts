@@ -15,12 +15,14 @@ export class FormComponent {
   @Input() form!: FormGroup;
   isDisableButton: boolean = false;
   @Input() isEdit: boolean = false;
+  @Input() formList: any;
 
 
   constructor(protected ref: NbDialogRef<unknown>, private dialogService: NbDialogService){}
 
   
   ngOnInit() {
+    console.log("config: ", this.config)
   }
 
   addUser(){
@@ -43,7 +45,14 @@ export class FormComponent {
   }
 
   externalValidation($event: any){
-    console.log("isValid: ", $event)
     this.isDisableButton = $event;
+  }
+
+  prev(){
+
+  }
+
+  next(){
+    this.formList[0].form.markAsDirty();
   }
 }

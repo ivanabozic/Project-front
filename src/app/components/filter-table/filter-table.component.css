@@ -11,3 +11,9 @@ table, th , td {
   table tr:nth-child(even) {
     background-color: #ffffff;
   }
+
+.search{
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 0px 10px 0px;
+}

@@ -26,6 +26,7 @@ export class TableComponent {
   selectedMessages: any;
   mail: any;
   hideLast: boolean = false;
+  title: any = 'Title'
   selectedRows: [] = [];
   selectedItem: any; 
   activePage: number = 1;
@@ -39,7 +40,7 @@ export class TableComponent {
   constructor(private dialogService: NbDialogService,){}
 
   ngOnInit() {
-
+    
   }  
 
   addForm(){
@@ -87,6 +88,8 @@ export interface Column {
   header: string;
   width: string;
   editable: boolean;
+  type: string;
+  tooltip: boolean;
 }
 
 

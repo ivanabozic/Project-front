@@ -1,0 +1,50 @@
+<div class="filter-div">
+    <div class="p-div">
+        <h3>{{ 'filter' | translate}}</h3>
+    </div>
+    <div style="min-height: 78%;">
+        <div *ngFor="let item of configFilterList" class="input-div">
+            <input 
+                nbInput 
+                type="text" 
+                *ngIf="item.type == 'text'"
+                fullWidth 
+                placeholder="{{ item.name | translate}}"
+                [(ngModel)]="filterModel[item.name]"
+            >
+
+            <input 
+            nbInput 
+            type="number" 
+            fullWidth 
+            *ngIf="item.type == 'number'" 
+            placeholder="{{ item.name | translate}}"
+            [(ngModel)]="filterModel[item.name]"
+        >
+
+        <nb-select 
+        *ngIf="item.type == 'select'" 
+        fullWidth 
+        placeholder="{{ (item.name ? item.name : 'None') | translate}}" 
+        [(ngModel)]="filterModel[item.name]"
+        >
+            <nb-option *ngFor="let option of item.data" value="{{ option.id }}">
+                {{ option.name }}
+            </nb-option>  
+        </nb-select>
+        <div  style="width: 100%;" *ngIf="item.type == 'date'" >
+            <input nbInput placeholder="Pick Date" [nbDatepicker]="datePicker" fullWidth  [(ngModel)]="filterModel[item.name]" placeholder="{{ (item.name ? item.name : 'None') | translate}}" >
+            <nb-datepicker #datePicker fullWidth></nb-datepicker>
+        </div>
+</div>
+    </div>
+
+    <div class="action-buttons">
+        <button nbButton status="primary" (click)="onFilterChanged()">
+            Search
+        </button>
+        <button nbButton status="danger" (click)="onClear()">
+            Clear
+        </button>
+    </div>
+</div>

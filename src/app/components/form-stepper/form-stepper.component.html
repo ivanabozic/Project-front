@@ -1,0 +1,96 @@
+<nb-card class="card">
+
+  <nb-card-header>
+    {{title }}
+  </nb-card-header>
+      <nb-stepper #stepper [linear]="linearMode" class="stepper">
+        <nb-step  *ngFor="let form of formList"  label="{{form.label}}">
+          <nb-card-body>
+            <form [formGroup]="form.form" style="height: 420px;">
+              <div class="row" *ngFor="let item of form.config">
+                  <label  *ngIf="!item.disabled"> 
+                      {{ (item.name ? item.name : "None") | translate }}
+                  </label>
+                  <input 
+                  *ngIf="item.type == 'input-text'" 
+                  type="text" 
+                  nbInput 
+                  fullWidth 
+                  placeholder="{{ (item.name ? item.name : 'None') | translate}}" 
+                  formControlName="{{ item.name }}" 
+                  type="text"
+
+                  >
+                  <input 
+                  *ngIf="item.type == 'input-number'" 
+                  type="text" 
+                  nbInput 
+                  fullWidth 
+                  placeholder="{{ (item.name ? item.name : 'None') | translate}}" 
+                  formControlName="{{ item.name }}" 
+                  type="number"
+
+                  >
+  
+                  <nb-select 
+                  *ngIf="item.type == 'input-select'" 
+                  fullWidth 
+                  placeholder="{{ (item.name ? item.name : 'None') | translate}}" 
+                  formControlName="{{ item.name }}"
+
+                   >
+                      <nb-option *ngFor="let option of item.data" value="{{ option.id }}">
+                      {{ option.name }}
+                      </nb-option>
+  
+                  </nb-select>
+  
+                  <nb-select 
+                  *ngIf="item.type == 'input-multipleselect'" 
+                  fullWidth 
+                  placeholder="{{ (item.name ? item.name : 'None') | translate}}" 
+                  formControlName="{{ item.name }}" 
+                  multiple 
+                  [(selected)]="item.selectArary"
+
+                  >
+                      <nb-option *ngFor="let option of item.data" value="{{ option.id }}">
+                      {{ option.name }}
+                      </nb-option>
+  
+                  </nb-select>
+  
+                  <div *ngIf="item.type == 'input-date'" style="width: 100%;">
+                      <input nbInput placeholder="Pick Date" [nbDatepicker]="datePicker" fullWidth formControlName="{{ item.name }}"  placeholder="{{ (item.name ? item.name : 'None') | translate}}" >
+                      <nb-datepicker #datePicker fullWidth></nb-datepicker>
+                  </div>
+  
+                  <div *ngIf="item.type == 'input-datatime'" style="width: 100%;">
+                      <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker" fullWidth formControlName="{{ item.name }}" placeholder="{{ (item.name ? item.name : 'None') | translate}}" >
+                      <nb-date-timepicker  withSeconds #dateTimePicker fullWidth></nb-date-timepicker>
+                  </div>
+                  <div *ngIf="item.type == 'input-password' && !isEdit">
+                      <app-password
+                      (pushData)="addPassword($event)"
+                      (validationEmitter)="externalValidation($event)"
+                      >
+                    
+                      </app-password>
+                  </div>
+              </div>
+          </form>
+          </nb-card-body>
+          <nb-card-footer  class="buttonRow">
+              <button nbButton status="success" (click)="addUser()" style="float: left;"> {{ (!isEdit ? "add" : "edit") | translate}} </button>
+              <div>
+                <button nbButton (click)="stepper.previous()"> <nb-icon icon="arrow-ios-back-outline"></nb-icon></button>
+                <button nbButton (click)="stepper.next()"><nb-icon icon="arrow-ios-forward-outline"></nb-icon></button>
+              </div>
+
+              <button nbButton status="danger" (click)="closeDialog()" style="float: right;"> {{ 'close' | translate}} </button>
+          </nb-card-footer>
+        </nb-step>
+  
+      </nb-stepper>
+
+  </nb-card>

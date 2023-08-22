@@ -2,11 +2,12 @@
 [data]='destinations'
 [cols]="cols"
 [config]="config"
+[settings]="settings"
 [form]="form"
 (pushData)="addToForm($event)"
 (editData)="editForm($event)"
-[custmWidth]="94"
-[settings]="settings"
+(filterData)="filter($event)"
+[custmWidth]="97"
 >
 
 </app-table>

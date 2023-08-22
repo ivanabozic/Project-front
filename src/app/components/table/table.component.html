@@ -1,20 +1,10 @@
 
 
 <div>
-<nb-card class="actionButton">
-    <div class="buttonDiv">
-        <button nbButton (click)="addForm()" status="primary"> 
-            <nb-icon icon="plus-outline"></nb-icon>
+        <button nbButton (click)="addForm()"> 
+            <nb-icon icon="plus-outline"></nb-icon>{{'addNew' | translate}}
         </button>
-        <button nbButton status="primary"> 
-            <nb-icon icon="save-outline"></nb-icon>
-        </button>
-        <button nbButton status="primary"> 
-            <nb-icon icon="save-outline"></nb-icon>
-        </button>
-    </div>
-  
-</nb-card>
+
   
     <div class="search">
         <app-filter-table
@@ -28,18 +18,38 @@
 
     <div class="card">
         <table style="width: 100%;">
-            <th *ngFor="let col of cols" [ngStyle]="{ 'width': col.width}">
-                {{ col.header }}
+            <th *ngFor="let col of cols" [ngStyle]="{ 'width': col.width}" style="background-color: white; padding: 0px 0px 0px 20px;">
+                {{ col.header | translate}}
             </th>
-
+            <th style="background-color: white;">
+                {{ 'delete' | translate}}
+            </th>
+            <th style="background-color: white;">
+                {{ 'edit' | translate}}
+            </th>
             <ng-container *ngFor="let item of data">
-                <tr>
-                    <td *ngFor="let col of cols">
-                        {{ item[col.field] }}
+                <tr style="font-size: small;">
+                    <td *ngFor="let col of cols" style="padding: 20px 0px 0px 20px;">
+                        <div *ngIf="col.type == 'input-select'" >
+                            {{ item[col.field]?.name }}
+              
+                        </div>
+                        <div *ngIf="col.type == 'input-text' && col.tooltip" style="overflow: hidden; height: 40px;"  nbTooltip="{{ item[col.field] }}">
+                            {{ item[col.field] }}
+                        </div>
+                        <div *ngIf="col.type == 'input-text' && !col.tooltip" style="overflow: hidden; height: 40px;" >
+                            {{ item[col.field] }}
+                        </div>
+                        <div *ngIf="col.type == 'input-date'">
+                            {{ item[col.field] | date: 'dd/MM/yyyy hh:mm a'}}
+                        </div>
+                    </td>
+                    <td >
+                        <button nbButton (click)="delete(item)"> <nb-icon icon="trash-outline"></nb-icon></button>
+                      
                     </td>
                     <td>
-                        <button nbButton (click)="delete(item)">Obrisi</button>
-                        <button nbButton (click)="editItem(item)">Izmeni</button>
+                        <button nbButton (click)="editItem(item)"> <nb-icon icon="edit-outline"></nb-icon></button>
                     </td>
                 </tr>
             </ng-container>
@@ -62,4 +72,5 @@
         </nav>
     </div>
 </div>
+
 

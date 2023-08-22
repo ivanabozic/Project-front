@@ -39,7 +39,7 @@ export class FlightService {
             {
             id: new FormControl('', [Validators.required]),
             origin: new FormControl('', [Validators.required]),
-            destination: new FormControl([], [Validators.required]),
+            destination: new FormControl('', [Validators.required]),
             departure: new FormControl(''),
             return: new FormControl(''),
             price: new FormControl('')
@@ -49,10 +49,10 @@ export class FlightService {
     setForm(form: FormGroup, data: Flight){
         form.setValue({
             id: data?.id,
-            origin: data?.origin,
-            destination: data?.destination,
-            departure: data?.departure,
-            return: data?.return,
+            origin: data?.origin.id,
+            destination: data?.destination.id,
+            departure: data.departure ? new Date(data?.departure) : null,
+            return: data.return ? new Date(data?.return) : null,
             price: data?.price,
         })
     }
